@@ -83,8 +83,9 @@
     setInterval(() =>{
         y.value = joy.GetY();
         if(y.value != yJoy1){
-            yJoy1 = y.value
+
             sendData(yJoy1);
+            yJoy1 = y.value
 
         }
     }, 50);
