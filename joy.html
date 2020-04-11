@@ -82,12 +82,12 @@
     }, 50);
     setInterval(() =>{
         y.value = joy.GetY();
-        if(y.value != yJoy1){
-
-            sendData(yJoy1);
+        // if(y.value != yJoy1){
             yJoy1 = y.value
+            sendData(yJoy1);
 
-        }
+
+        // }
     }, 50);
 
     var joy2 = new JoyStick('joyDivR');
