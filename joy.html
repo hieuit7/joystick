@@ -1,77 +1,129 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
+<head>
     <title>Joy</title>
     <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
-      #joystick1 {
-        border: 1px solid #9C9898;
-      }
-      #joystick2 {
-          border: 1px solid #9C9898;
-      }
-        .joyDiv{
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #joystick1 {
+            border: 1px solid #9C9898;
+        }
+
+        #joystick2 {
+            border: 1px solid #9C9898;
+        }
+
+        .joyDiv {
             width: 50%;
             float: left;
         }
 
     </style>
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-	<script src="joy.js"></script>
-  </head>
-  <body>
-    <div class="joyDiv">
-        <div id="joyDivL" style="width:200px;height:200px;margin-bottom:20px;margin:50px"></div>
-        Posizione X:<input id="posizioneX1" type="text" /></br>
-        Posizione Y:<input id="posizioneY1" type="text" /></br>
-        Direzione:<input id="direzione1" type="text" /></br>
-        X :<input id="X1" type="text" /></br>
-        Y :<input id="Y1" type="text" />
-    </div>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="joy.js"></script>
+</head>
+<body>
+<div>
+    <input id="url" name="url"><input value="Connect" name="submit" type="submit" onclick="connect_websocket()">
+</div>
+<div class="joyDiv">
+    <div id="joyDivL" style="width:200px;height:200px;margin-bottom:20px;margin:50px"></div>
+    Posizione X:<input id="posizioneX1" type="text"/></br>
+    Posizione Y:<input id="posizioneY1" type="text"/></br>
+    Direzione:<input id="direzione1" type="text"/></br>
+    X :<input id="X1" type="text"/></br>
+    Y :<input id="Y1" type="text"/>
+</div>
 
-    <div class="joyDiv">
-        <div id="joyDivR" style="width:200px;height:200px;margin-bottom:20px;margin:50px"></div>
+<div class="joyDiv">
+    <div id="joyDivR" style="width:200px;height:200px;margin-bottom:20px;margin:50px"></div>
 
-        Posizione X:<input id="posizioneX2" type="text" /></br>
-        Posizione Y:<input id="posizioneY2" type="text" /></br>
-        Direzione:<input id="direzione2" type="text" /></br>
-        X :<input id="X2" type="text" /></br>
-        Y :<input id="Y2" type="text" />
-    </div>
-    <script type="text/javascript">
-// Create JoyStick object into the DIV 'joyDiv'
-var joy = new JoyStick('joyDivL');
+    Posizione X:<input id="posizioneX2" type="text"/></br>
+    Posizione Y:<input id="posizioneY2" type="text"/></br>
+    Direzione:<input id="direzione2" type="text"/></br>
+    X :<input id="X2" type="text"/></br>
+    Y :<input id="Y2" type="text"/>
+</div>
+<script type="text/javascript">
+    // Create JoyStick object into the DIV 'joyDiv'
+    var websocket = null;
+    var xJoy1 = 0;
+    var yJoy1 = 0;
+    var xJpy2 = 0;
+    var yJpy2 = 0;
 
-var inputPosX = document.getElementById("posizioneX1");
-var inputPosY = document.getElementById("posizioneY1");
-var direzione = document.getElementById("direzione1");
-var x = document.getElementById("X1");
-var y = document.getElementById("Y1");
+    var joy = new JoyStick('joyDivL');
 
-setInterval(function(){ inputPosX.value=joy.GetPosX(); }, 100);
-setInterval(function(){ inputPosY.value=joy.GetPosY(); }, 100);
-setInterval(function(){ direzione.value=joy.GetDir(); }, 100);
-setInterval(function(){ x.value=joy.GetX(); }, 100);
-setInterval(function(){ y.value=joy.GetY(); }, 100);
+    var inputPosX = document.getElementById("posizioneX1");
+    var inputPosY = document.getElementById("posizioneY1");
+    var direzione = document.getElementById("direzione1");
+    var x = document.getElementById("X1");
+    var y = document.getElementById("Y1");
 
-var joy2 = new JoyStick('joyDivR');
+    setInterval(function () {
+        inputPosX.value = joy.GetPosX();
+    }, 100);
+    setInterval(function () {
+        inputPosY.value = joy.GetPosY();
+    }, 100);
+    setInterval(function () {
+        direzione.value = joy.GetDir();
+    }, 100);
+    setInterval( ()=> {
+        x.value = joy.GetX();
+        if(xJoy1 != x.value){
+            xJoy1 = x.value;
+            // sendData()
+        }
+    }, 100);
+    setInterval(() =>{
+        y.value = joy.GetY();
+        if(y.value != yJoy1){
+            yJoy1 = y.value
+            sendData(yJoy1);
+
+        }
+    }, 100);
+
+    var joy2 = new JoyStick('joyDivR');
 
 
-var inputPosX2 = document.getElementById("posizioneX2");
-var inputPosY2 = document.getElementById("posizioneY2");
-var direzione2 = document.getElementById("direzione2");
-var x2 = document.getElementById("X2");
-var y2 = document.getElementById("Y2");
+    var inputPosX2 = document.getElementById("posizioneX2");
+    var inputPosY2 = document.getElementById("posizioneY2");
+    var direzione2 = document.getElementById("direzione2");
+    var x2 = document.getElementById("X2");
+    var y2 = document.getElementById("Y2");
 
-setInterval(function(){ inputPosX2.value=joy2.GetPosX(); }, 100);
-setInterval(function(){ inputPosY2.value=joy2.GetPosY(); }, 100);
-setInterval(function(){ direzione2.value=joy2.GetDir(); }, 100);
-setInterval(function(){ x2.value=joy2.GetX(); }, 100);
-setInterval(function(){ y2.value=joy2.GetY(); }, 100);
+    setInterval(function () {
+        inputPosX2.value = joy2.GetPosX();
+    }, 100);
+    setInterval(function () {
+        inputPosY2.value = joy2.GetPosY();
+    }, 100);
+    setInterval(function () {
+        direzione2.value = joy2.GetDir();
+    }, 100);
+    setInterval(function () {
+        x2.value = joy2.GetX();
+    }, 100);
+    setInterval(function () {
+        y2.value = joy2.GetY();
+    }, 100);
 
-    </script>
-  </body>
+    let connect_websocket = () =>{
+        var url = document.getElementById('url').value;
+        websocket = new WebSocket("ws://"+url+"/");
+        console.log(url)
+    }
+    sendData = (data)=>{
+        websocket.send(data)
+    }
+    // connect_websocket()
+
+</script>
+</body>
 </html>
