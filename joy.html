@@ -128,7 +128,9 @@
     // connect_websocket()
     let calibration = ()=>{
         connect_websocket()
-        websocket.send('c')
+        setTimeout(()=>{
+            websocket.send('c')
+        },3000)
     }
 </script>
 </body>
