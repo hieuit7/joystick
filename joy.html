@@ -79,7 +79,7 @@
             xJoy1 = x.value;
             // sendData()
         }
-    }, 100);
+    }, 50);
     setInterval(() =>{
         y.value = joy.GetY();
         if(y.value != yJoy1){
@@ -87,7 +87,7 @@
             sendData(yJoy1);
 
         }
-    }, 100);
+    }, 50);
 
     var joy2 = new JoyStick('joyDivR');
 
@@ -100,7 +100,7 @@
 
     setInterval(function () {
         inputPosX2.value = joy2.GetPosX();
-    }, 100);
+    }, 50);
     setInterval(function () {
         inputPosY2.value = joy2.GetPosY();
     }, 100);
