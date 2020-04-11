@@ -30,7 +30,7 @@
 <div>
     <input id="url" name="url" value="192.168.0.103:6789">
     <input value="Connect" name="submit" type="submit" onclick="connect_websocket()">
-    <input value="calibration" name="calibration" type="submit", onclick="calibration">
+    <input value="calibration" name="calibration" type="submit", onclick="calibration()">
 </div>
 <div class="joyDiv">
     <div id="joyDivL" style="width:200px;height:200px;margin-bottom:20px;margin:50px"></div>
@@ -127,10 +127,14 @@
     }
     // connect_websocket()
     let calibration = ()=>{
-        connect_websocket()
-        setTimeout(()=>{
-            websocket.send('c')
-        },3000)
+        // connect_websocket()
+        if(websocket != null){
+            alert("calibrating")
+            setTimeout(()=>{
+                websocket.send('c')
+            },3000)
+        }
+
     }
 </script>
 </body>
